@@ -20,7 +20,11 @@ app.get('/', (req, res) => {
 });
 app.get('/users/:id', (req, res) => {
     // req.params.id
+
+    //finds the user by matching id of element in arr to id in request
     const user = users.find(u => u.id === req.params.id);
+
+    //if user with that id is not there, user will be "falsey" so 404 will be returned
     if(!user){
         return res.status(404).json({"error":"not found"})
     }
@@ -30,7 +34,12 @@ app.get('/users/:id', (req, res) => {
 });
 app.put('/users/:id', (req, res) => {
     // req.params.id
+
+    //finds the user by matching id of element in arr to id in request
+
     const user = users.find(u => u.id === req.params.id);
+
+    //if user with that id is not there, user will be "falsey" so 404 will be returned
     if(!user){
         return res.status(400).json({"error":"user with that id is not found"})
     }
@@ -43,6 +52,8 @@ app.put('/users/:id', (req, res) => {
     if(!("email" in req.body)){
         return res.status(400).json({"error": "Email not present"})
     }
+
+    //update
     user.name = req.body.name;
     user.email = req.body.email;
     
@@ -53,10 +64,14 @@ app.put('/users/:id', (req, res) => {
 });
 app.delete('/users/:id', (req, res) => {
     // req.params.id
+        
+    //finds the index of user in array by matching id of element in arr to id in request
     const idx = users.findIndex(u => u.id === req.params.id);
     if(idx<0){
         return res.status(400).json({"error":"user with that id is not found"})
     }
+
+    //remove user at idx position
     users.splice(idx,1);
      
 
@@ -65,6 +80,7 @@ app.delete('/users/:id', (req, res) => {
     res.status(204).send()
 });
 app.post('/users',(req, res) => {
+    //error check
     if(!("body" in req)){
         return res.status(400).json({"error":"Invalid Request"})
     }
@@ -74,13 +90,14 @@ app.post('/users',(req, res) => {
     if(!("email" in req.body)){
         return res.status(400).json({"error": "Email not present"})
     }
+    //create new user. use uuid to ensure unique id
     const user = {
         "id": uuid.v4(),
         "name": req.body.name,
         "email": req.body.email
     }
     users.push(user);
-    return res.status(201).json(user);
+    res.status(201).json(user);
 });
 
 // Do not touch the code below this comment
